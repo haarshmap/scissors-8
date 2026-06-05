@@ -95,6 +95,7 @@ function start_game()
 	 nstars.x = flr(rnd(128))
 	 nstars.y = flr(rnd(128))
 	 nstars.col = 7
+	 nstars.r = (rnd(2))
 	 add(stars, nstars)
 	end
 	
@@ -116,10 +117,6 @@ function drw_mg()
  doshake()
 	draw_stars()
  ani_stars(1.5,1.5,sel1)
- 
- sspr(r.x,r.y,r.w,r.h,r.px,r.py+sin(t/30))
- sspr(p.x,p.y,p.w,p.h,p.px,p.py+sin(t/31))
- sspr(s.x,s.y,s.w,s.h,s.px,s.py+sin(t/32))
 
  if sel1 == 1 then
   sspr(r.x,r.y,r.w,r.h,r.px,r.py+sin(t/30))
@@ -133,7 +130,12 @@ function drw_mg()
   sspr(s.x,s.y,s.w,s.h,s.px,s.py+sin(t/32))
 	 drawparts(s.x,s.y)
  end
-end
+  
+ sspr(r.x,r.y,r.w,r.h,r.px,r.py+sin(t/30))
+ sspr(p.x,p.y,p.w,p.h,p.px,p.py+sin(t/31))
+ sspr(s.x,s.y,s.w,s.h,s.px,s.py+sin(t/32))
+
+end 
 
 function drw_fg()
  cls()
@@ -227,9 +229,9 @@ function ret_str(sel)
 end
 
 function result()
- if p1=="shield" and p2=="sword" or
-    p1=="staff" and p2=="shield"or
-    p1=="sword" and p2=="staff" then
+ if p1=="rock" and p2=="scissors" or
+    p1=="paper" and p2=="rock" or
+    p1=="scissors" and p2=="papers" then
   return "p1 wins!!!"
  else
   return "p2 wins!!!"
@@ -254,7 +256,7 @@ end
 function draw_stars()
  for i = 1,#stars do
  	local nstars = stars[i]
-  pset(nstars.x,nstars.y,nstars.col)
+   circ(nstars.x,nstars.y,nstars.r,nstars.col)
  end
 end
 
@@ -264,10 +266,10 @@ function ani_stars(xspd, yspd, sel1)
 		//spd depending on sel1
 		if sel1 == 0 then
    nstars.x += 0
-   nstars.y += yspd
+   nstars.y -= yspd
    nstars.col = 7
-   if nstars.y > 128 then
-	   nstars.y -= 128
+   if nstars.y < 0 then
+	   nstars.y += 128
 	  end
 		elseif sel1 == 1 then
    nstars.x -= xspd
@@ -277,18 +279,18 @@ function ani_stars(xspd, yspd, sel1)
 	   nstars.x += 128
 	  end
 		elseif sel1 == 2 then
-   nstars.x += 0
-   nstars.y -= yspd
-   nstars.col = 13
-	  if nstars.y < 0 then
-	   nstars.y += 128
-	  end
-		elseif sel1 == 3 then
    nstars.x += xspd
    nstars.y += 0
-   nstars.col = 2
+   nstars.col = 13
    if nstars.x > 128 then
 	   nstars.x -= 128
+	  end
+		elseif sel1 == 3 then
+   nstars.x += 0
+   nstars.y += yspd
+   nstars.col = 2
+   if nstars.y > 128 then
+	   nstars.y -= 128
 	  end
 		end  
  end
@@ -299,7 +301,7 @@ function addparts(px,py,col)
   local nparts = {}
   nparts.x = px
   nparts.y = py
-  nparts.r = flr(rnd(5))
+  nparts.r = flr(rnd(6))
   nparts.col = col
   nparts.sx = rnd(2)-1
   nparts.sy = rnd(2)-1
@@ -320,7 +322,7 @@ function updparts()
   local nparts = parts[i]
   nparts.x += nparts.sx
   nparts.y += nparts.sy
-  nparts.r -= 0.3
+  nparts.r -= 0.2
  end
 end
 __gfx__
