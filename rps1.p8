@@ -26,6 +26,8 @@ end
 
 function _update()
  t+=1
+ timer -= 1
+ updparts()
 
 	if state=="start" then
 	 upd_sg()
@@ -43,6 +45,7 @@ function start_game()
 	state="start"
 	shake = 0
 	t=0
+	timer = 0
 	
 	sel1=0
 	sel2=rand(2)
@@ -56,7 +59,8 @@ function start_game()
   py=64,
   id=1,
   a=0,
-  s=1
+  s=1,
+  col=4
  }
 
  p={
@@ -68,7 +72,8 @@ function start_game()
   py=64,
   id=2,
   a=0,
-  s=1
+  s=1,
+  col=13
  }
 
  s={
@@ -80,7 +85,8 @@ function start_game()
   py=96,
   id=3,
   a=0,
-  s=1
+  s=1,
+  col=2
  }
   
 	stars={}
@@ -91,6 +97,9 @@ function start_game()
 	 nstars.col = 7
 	 add(stars, nstars)
 	end
+	
+	parts={}
+ 
 end
 -->8
 //draw
@@ -113,21 +122,21 @@ function drw_mg()
  sspr(s.x,s.y,s.w,s.h,s.px,s.py+sin(t/32))
 
  if sel1 == 1 then
-  big_shwave(r.px,r.py)    
+  sspr(r.x,r.y,r.w,r.h,r.px,r.py+sin(t/30))
+	 drawparts()
  end
  if sel1 == 2 then
-  p.a = 10  
-  spr_r(p.s,p.px,p.py,p.a,p.w,p.h)
+  sspr(p.x,p.y,p.w,p.h,p.px,p.py+sin(t/31))
+	 drawparts(p.x,p.y)
  end
  if sel1 == 3 then
-  s.a = 10  
-  spr_r(s.s,s.px,s.py,s.a,s.w,s.h)
+  sspr(s.x,s.y,s.w,s.h,s.px,s.py+sin(t/32))
+	 drawparts(s.x,s.y)
  end
 end
 
 function drw_fg()
  cls()
- doshake()
  doshake()
 	draw_stars()
  ani_stars(1.5,1.5,sel1)
@@ -157,17 +166,24 @@ end
 function upd_mg()
  if btn(⬅️) then
   sel1=r.id
-  shake=1
- end
- if btn(⬆️) then
-  sel1=p.id
+  addparts(r.px+8,r.py+8,r.col)
+  updparts()
+  
   shake=1
  end
  if btn(➡️) then
-  sel1=s.id
+  sel1=p.id
+  addparts(p.px+8,p.py+8,p.col)
+  updparts()
   shake=1
  end
  if btn(⬇️) then
+  sel1=s.id
+  addparts(s.px+8,s.py+8,s.col)
+  updparts()
+  shake=1
+ end
+ if btn(⬆️) then
   sel1=0
   shake=1
  end  
@@ -200,13 +216,13 @@ function ret_str(sel)
 	 return "-----"
 	end
 	if sel==1 then
-	 return "shield"
+	 return "rock"
 	end
 	if sel==2 then
-	 return "sword"
+	 return "paper"
 	end
 	if sel==3 then
-	 return "staff"
+	 return "scissor"
 	end
 end
 
@@ -278,45 +294,35 @@ function ani_stars(xspd, yspd, sel1)
  end
 end
 
-function lerp(a,b,t)
- local result=a+t*(b-a)
- return result
+function addparts(px,py,col)
+ for i=1,10 do
+  local nparts = {}
+  nparts.x = px
+  nparts.y = py
+  nparts.r = flr(rnd(5))
+  nparts.col = col
+  nparts.sx = rnd(2)-1
+  nparts.sy = rnd(2)-1
+
+  add(parts,nparts)
+ end 
 end
 
-function spr_r(s,x,y,a,w,h)
- sw=(w or 1)*8
- sh=(h or 1)*8
- sx=(s%8)*8
- sy=flr(s/8)*8
- x0=flr(0.5*sw)
- y0=flr(0.5*sh)
- a=a/360
- sa=sin(a)
- ca=cos(a)
- for ix=0,sw-1 do
-  for iy=0,sh-1 do
-   dx=ix-x0
-   dy=iy-y0
-   xx=flr(dx*ca-dy*sa+x0)
-   yy=flr(dx*sa+dy*ca+y0)
-   if (xx>=0 and xx<sw and yy>=0 and yy<=sh) then
-    pset(x+ix,y+iy,sget(sx+xx,sy+yy))
-   end
-  end
+function drawparts()
+ for i=1,#parts do
+  local nparts = parts[i]
+  circ(nparts.x,nparts.y,nparts.r,nparts.col)
+ end 
+end
+
+function updparts()
+ for i=1,#parts do
+  local nparts = parts[i]
+  nparts.x += nparts.sx
+  nparts.y += nparts.sy
+  nparts.r -= 0.3
  end
 end
-
-function big_shwave(shx,shy)
- local mysw={}
- mysw.x=shx
- mysw.y=shy
- mysw.r=3
- mysw.tr=25
- mysw.col=7
- mysw.speed=4
- add(shwaves,mysw)
-end
-
 __gfx__
 000000000055dd000077777700006600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000055dddd00775557000060000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
