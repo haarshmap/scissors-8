@@ -1,8 +1,9 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
+//main stuff
 function _init()
- start_game()
+	start_game()
 end
 
 function _draw()
@@ -12,24 +13,10 @@ function _draw()
 	if state=="menu" then
 	 drw_mg()
 	end
-	if state=="buff" then
-	 drw_buff()
-	end
-	if state=="result" then
-	 drw_res()
-	end
-	if state=="end" then
-	 drw_end()
-	end
 end
 
 function _update()
  t+=1
- if timer <= 0 then
-  timer = 0
- else
-  timer -= 1
- end
  updparts()
  
 	if state=="start" then
@@ -37,57 +24,26 @@ function _update()
 	end
 	if state=="menu" then
 	 upd_mg()
-	 p1.hp-=0.1
-	 if p1.hp < 0 then
-	  p1.hp = 0 
-	  state = "end"
-	 end
-	end
-	if state=="result" then
-	 upd_res()
-	 p1.hp-=0.1
-	 if p1.hp < 0 then
-	  p1.hp = 0 
-	  state = "end"
-	 end
-	 if boss.hp < 0 then
-	  boss.hp = 0 
-	  timer = 500
-	  state = "buff"
-	 end
-	end
-	if state=="buff" then
-	 upd_buff()
-	 p1.hp-=0.1
-	 if p1.hp < 0 then
-	  p1.hp = 0 
-	  state = "end"
-	 end
-	end
-	if state=="end" then
-	 upd_end()
 	end
 end
 
--->8
 //start game
 function start_game()
 	state="start"
 	shake = 0
 	t=0
-	timer=0
+		
 	//players
 	p1={
-	 hp=100,
+	 hp=5,
 	 dmg=1,
- 	sel1=2,
- 	atk=false,
+ 	sel1=0,
+ 	out=false
 	}
-	boss={
-	 hp=1,
-	 thp=5,
+	p2={
+	 hp=5,
 	 dmg=1,
-	 sel2=flr(rand(3)),
+	 sel2=rand(2)
 	}
 	
 	//items
@@ -139,31 +95,12 @@ function start_game()
 	 add(stars,nstars)
 	end
 	
-	rct1={
-	 x1=12,
-	 y1=118,
-	 x2=114,
-	 y2=124,
-	}
-	rct2={
-	 x1=12,
-	 y1=2,
-	 x2=64,
-	 y2=8,
-	 barw=48
-	}
-	
 	parts={}
 end
 -->8
 //draw
 function drw_sg()
  cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("boss.sel2:"..boss.sel2,0,24,7)
- print("timer"..timer,64,8,7)
-
 	print("placeholder ig for now",28,32,7)
  doshake()
 	draw_stars()
@@ -172,10 +109,6 @@ end
 
 function drw_mg()
  cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("boss.sel2:"..boss.sel2,0,24,7)
- print("timer"..timer,64,8,7)
  doshake()
 	draw_stars()
  ani_stars(p1.sel1)
@@ -197,57 +130,7 @@ function drw_mg()
  sspr(p.x,p.y,p.w,p.h,p.px,p.py+sin(t/31))
  sspr(s.x,s.y,s.w,s.h,s.px,s.py+sin(t/32))
 
- print("p1.hp:"..p1.hp,24,56,7)
- print("boss.hp:"..boss.hp,24,48,7)
-
-
- drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
-
 end 	
-
-function drw_res()
- cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("boss.sel2:"..boss.sel2,0,24,7)
- print("timer"..timer,64,8,7)
- doshake()
-	draw_stars()
- ani_stars(p1.sel1)
-  
- print("p1.hp:"..p1.hp,24,56,7)
- print("boss.hp:"..boss.hp,24,48,7)
-
- drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
-
-end
-
-function drw_buff()
- cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("p1.dmg:"..p1.dmg,0,24,7)
- print("boss.sel2:"..boss.sel2,0,32,7)
- print("timer"..timer,64,8,7)
- sspr(r.x,r.y,r.w,r.h,r.px-8,r.py+sin(t/30))
- sspr(p.x,p.y,p.w,p.h,p.px+12,p.py+sin(t/31))
- sspr(s.x,s.y,s.w,s.h,s.px,(s.py-32)+sin(t/32))
- 
- drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
-
-end
-
-function drw_end()
- cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("p1.dmg:"..p1.dmg,0,24,7)
- print("boss.sel2:"..boss.sel2,0,32,7)
- print("timer"..timer,64,8,7)
- print("game over",76,76,7)
- 
-end
-
 -->8
 //update
 function upd_sg()
@@ -262,138 +145,50 @@ function upd_mg()
   p1.sel1=r.id
   addparts(r.px+8,r.py+8,r.col)
   updparts()
-  sfx(0)
+  sfx(1)
   shake=1
  end
  if btn(➡️) then
   p1.sel1=p.id
   addparts(p.px+8,p.py+8,p.col)
   updparts()
-  sfx(0)
+  sfx(1)
   shake=1
  end
  if btn(⬇️) then
   p1.sel1=s.id
   addparts(s.px+8,s.py+8,s.col)
   updparts()
-  sfx(0)
+  sfx(1)
   shake=1
  end
  if btn(⬆️) then
   p1.sel1=0
+  sfx(1)
   shake=1
- end  
- if btnp(❎) then
-  boss.sel2 = flr(rand(3))
-  p1.atk = retout(p1.sel1,boss.sel2)
-  if p1.atk == true then
-   p1atk()
-   rct2.barw = rct2.barw*(boss.hp/boss.thp)
-
-  elseif p1.atk == false then
-   p2atk()
-  end 
-  state="result"
- end
- if p1.hp == 0 then
-  state="end"
- end
- if boss.hp == 0 then
-  state="buff"
- end
-end
-
-function upd_buff()
- if btn(⬅️) then
-  p1.sel1=r.id
-  addparts(r.px+8,r.py+8,r.col)
-  updparts()
-  sfx(0)
-  shake=1
- end
- if btn(➡️) then
-  p1.sel1=p.id
-  addparts(p.px+8,p.py+8,p.col)
-  updparts()
-  sfx(0)
-  shake=1
- end
- if btn(⬇️) then
-  p1.sel1=s.id
-  addparts(s.px+8,s.py+8,s.col)
-  updparts()
-  sfx(0)
-  shake=1
- end
- if btn(⬆️) then
-  p1.sel1=0
-  shake=1
- end   
- if btnp(🅾️) then
-   if p1.hp <= 80 and sel1 == 1 then
-    p1.hp += 20
-   end
-   if p1.sel1 == 2 then
-
-   end
-   if p1.sel1 == 3 then
-    p1.dmg += 3
-
-  end
-  boss.hp += boss.thp
-  boss.dmg += 5
-  state="menu"
- end
-end 
-
-function upd_res()
- if btnp(🅾️) then
-  state = "menu"
-  boss.sel2 = flr(rand(3))
- end
-end
-
-function upd_end()
- if btnp(🅾️) then
-  state="start"
-  start_game()
- end
-end
--->8
-//game logic
-function retout(sel1,sel2)
- if sel1 == 0 or sel1 == sel2 then
-  return false
  end 
- if sel1 == 1 and sel2 == 3 or
-    sel1 == 2 and sel2 == 1 or
-    sel1 == 3 and sel2 == 2 then
-  return true
- else
-  return false 
- end
-end 
-
-function p1atk()
- boss.hp -= p1.dmg
- if boss.hp < 0 then
-  boss.hp=0
- end
 end
-
-function p2atk()
- p1.hp -= boss.dmg
- if p1.hp < 0 then
-  p1.hp=0
- end
-end
-
 
 -->8
 //tools
 function rand(i)
  p2=flr(rnd(i))+1
  return p2
+end
+
+function ret_str(sel)
+	if sel==0 then
+	 return "-----"
+	end
+	if sel==1 then
+	 return "rock"
+	end
+	if sel==2 then
+	 return "paper"
+	end
+	if sel==3 then
+	 return "scissor"
+	end
 end
 
 function doshake()
@@ -485,20 +280,15 @@ function updparts()
  end
 end
 
-function drw_hp(x1,y1,x2,y2,barw)
- rect(x1,y1,x2,y2,7) 
- rectfill(x1+2,y1+2,x1+2+barw,y2-2,11) 
-end
-
 __gfx__
-00000000111110000001111100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000100011000011000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700100881100118800100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00077000108828111182880100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00077000118e28011082e81100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700011888011088811000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000001100011000110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000111111111100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000000000055dd000077777700006600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000055dddd00775557000060000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0070070055ddddd50757770000060006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0007700055566ddd0775550000060006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00077000555566dd0757777088866660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00700700556566d50075557080880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000005666d500757777088080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000006555007775770008880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000177777666561000000001d100000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000017777766656d1000000001d100000000000000000000000000000000000000000000000111110000000000000000000000000000000000
 0000000111100000017777776665dd100000001dd100000000000111100000000000000000000000000000001ddd610000000000000000000000000000000000
@@ -516,4 +306,5 @@ __gfx__
 00001dddd1111000166666665771000000000188810000000001111dddd100000000000000000000000000111000000000000000000000000000000000000000
 00000111100000000166666665710000000000111000000000000001111000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
-000400000000025050270502a0502b050280502015000150000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000700002c0502c0502c0402b0502706024060210601c0501b0401b0201c0101d01021020250102702000130001400015000170001700017000170001600016000150001400d1300b13010130151500015000130
+0004000025050270502805029050270501f1500015000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
