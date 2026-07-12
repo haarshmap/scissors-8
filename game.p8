@@ -36,7 +36,6 @@ function _update()
  else
   sp=1
  end
-	 p1.hp-=0.1
 	 if p1.hp < 0 then
 	  p1.hp = 0 
 	  state = "end"
@@ -44,7 +43,6 @@ function _update()
 	end
 	if state=="result" then
 	 upd_res()
-	 p1.hp-=0.1
 	 if p1.hp < 0 then
 	  p1.hp = 0 
 	  state = "end"
@@ -57,7 +55,6 @@ function _update()
 	end
 	if state=="buff" then
 	 upd_buff()
-	 p1.hp-=0.1
 	 if p1.hp < 0 then
 	  p1.hp = 0 
 	  state = "end"
@@ -81,10 +78,12 @@ function start_game()
 	
 	//players
 	p1={
-	 hp=1000,
+	 hp=100,
 	 dmg=1,
  	sel1=2,
  	atk=false,
+ 	stored=0,
+ 	storedcap=0,
 	}
 	boss={
 	 hp=5,
@@ -286,11 +285,13 @@ function upd_mg()
   boss.sel2 = flr(rand(3))
   p1.atk = retout(p1.sel1,boss.sel2)
   if p1.atk == true then
-   p1atk()
+   p1atk(p1.stored)
    rct2.barw = rct2.barw*(boss.hp/boss.thp)
-
   elseif p1.atk == false then
    p2atk()
+   if p1.storedcap != 0 then
+    p1.stored += 5
+   end
   end 
   state="result"
  end
@@ -335,14 +336,14 @@ function upd_buff()
   shake=1
  end   
  if btnp(🅾️) then
-   if p1.hp <= 80 and sel1 == 1 then
+   if p1.hp <= 40 and sel1 == 1 then
     p1.hp += 20
    end
    if p1.sel1 == 2 then
-
+				p1.storedcap += 5
    end
    if p1.sel1 == 3 then
-    p1.dmg += 3
+    p1.dmg += 5
    end
   boss.hp += boss.thp
   boss.dmg += 5
@@ -378,8 +379,8 @@ function retout(sel1,sel2)
  end
 end 
 
-function p1atk()
- boss.hp -= p1.dmg
+function p1atk(storedmg)
+ boss.hp -= p1.dmg + storedmg
  if boss.hp < 0 then
   boss.hp=0
  end
@@ -491,7 +492,7 @@ end
 
 function drw_hp(x1,y1,x2,y2,barw)
  rect(x1,y1,x2,y2,7) 
- rectfill(x1+2,y1+2,x1+2+barw,y2-2,11) 
+ rectfill(x1+2,y1+2,x1+barw,y2-2,11) 
 end
 
 function debug(state, sel1, hp1, hp2, sel2)
