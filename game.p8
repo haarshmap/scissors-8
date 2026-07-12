@@ -159,9 +159,7 @@ end
 //draw
 function drw_sg()
  cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("boss.sel2:"..boss.sel2,0,24,7)
+ debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
 
 	print("placeholder ig for now",28,32,7)
  doshake()
@@ -171,10 +169,7 @@ end
 
 function drw_mg()
  cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("boss.sel2:"..boss.sel2,0,24,7)
- print("frames:"..arr[flr(n)],0,32,7)
+ debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
 
  doshake()
 	draw_stars()
@@ -198,10 +193,6 @@ function drw_mg()
  spr(r.n,r.px,r.py+sin(t/30),r.w,r.h)
  spr(p.n,p.px,p.py+sin(t/30),p.w,p.h)
  spr(s.n,s.px,s.py+sin(t/30),s.w,s.h)
-
- print("p1.hp:"..p1.hp,24,56,7)
- print("boss.hp:"..boss.hp,24,48,7)
-
 
  drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
 
@@ -229,12 +220,8 @@ function drw_buff()
  doshake()
 	draw_stars()
  ani_stars(p1.sel1)
- 
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("p1.dmg:"..p1.dmg,0,24,7)
- print("boss.sel2:"..boss.sel2,0,32,7)
-
+  
+ debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
 
  spr(r.n,r.px,r.py+sin(t/30),r.w,r.h)
  spr(p.n,p.px,p.py+sin(t/30),p.w,p.h)
@@ -245,12 +232,7 @@ end
 
 function drw_end()
  cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("p1.dmg:"..p1.dmg,0,24,7)
- print("boss.sel2:"..boss.sel2,0,32,7)
  print("game over",76,76,7)
- 
 end
 
 -->8
@@ -500,6 +482,15 @@ function drw_hp(x1,y1,x2,y2,barw)
  rectfill(x1+2,y1+2,x1+2+barw,y2-2,11) 
 end
 
+function debug(state, sel1, hp1, hp2, sel2)
+ print("state:"..state,0,8,7)
+ print("p1.sel1:"..sel1,0,16,7)
+ print("p1.hp:"..hp1,24,56,7)
+ print("boss.hp:"..hp2,24,48,7)
+ if sel2 != nil then
+  print("boss.sel2:"..sel2,0,32,7)
+ end
+end
 __gfx__
 000000000000000000000000000177777666561000000001d1000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000017777766656d1000000001d1000000000000000000000000000000000000000000000000000000000000000000000000000000
