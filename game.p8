@@ -81,13 +81,13 @@ function start_game()
 	
 	//players
 	p1={
-	 hp=100,
+	 hp=1000,
 	 dmg=1,
  	sel1=2,
  	atk=false,
 	}
 	boss={
-	 hp=1,
+	 hp=5,
 	 thp=5,
 	 dmg=1,
 	 sel2=flr(rand(3)),
@@ -161,10 +161,16 @@ function drw_sg()
  cls()
  debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
 
-	print("placeholder ig for now",28,32,7)
+	print("scissors-8",48,56,7)
+ print("press 🅾️ to start",34,64,7)
  doshake()
 	draw_stars()
  ani_stars(p1.sel1)
+ 
+ spr(r.n,56,24+sin(t/30),r.w,r.h)
+ spr(p.n,32,80+sin(t/30),p.w,p.h)
+ spr(s.n,80,80+sin(t/30),s.w,s.h)
+
 end
 
 function drw_mg()
@@ -223,6 +229,9 @@ function drw_buff()
   
  debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
 
+ rect(38,16,90,56,7)
+	buffinfo(p1.sel1)
+
  spr(r.n,r.px,r.py+sin(t/30),r.w,r.h)
  spr(p.n,p.px,p.py+sin(t/30),p.w,p.h)
  spr(s.n,s.px,s.py+sin(t/30),s.w,s.h)
@@ -231,8 +240,11 @@ function drw_buff()
 end
 
 function drw_end()
- cls()
- print("game over",76,76,7)
+	cls(2)
+ draw_stars()
+ ani_stars(p1.sel1)
+ print("game over",48,56,7)
+ print("press 🅾️ to start again",20,64,7)
 end
 
 -->8
@@ -414,7 +426,7 @@ function ani_stars(sel1)
  for i = 1,#stars do
  	local nstars = stars[i]
 		//spd depending on sel1
-		if sel1 == 0 then
+		if sel1 == 0  then
    nstars.x += 0
    nstars.y -= nstars.sy
    nstars.col = 7
@@ -438,7 +450,7 @@ function ani_stars(sel1)
 		elseif sel1 == 3 then
    nstars.x += 0
    nstars.y += nstars.sy
-   nstars.col = 2
+   nstars.col = 8
    if nstars.y > 128 then
 	   nstars.y -= 128
 	  end
@@ -491,6 +503,27 @@ function debug(state, sel1, hp1, hp2, sel2)
   print("boss.sel2:"..sel2,0,32,7)
  end
 end
+
+function buffinfo(sel1)
+ if sel1 == 0 then
+  print("choose",52,24,7)
+  print("your",56,32,7)
+  print("buffs",54,40,7)
+
+ end 
+ if sel1 == 1 then
+  print("store up",44,24,4)
+  print("stacks with",44,32,4)
+  print("attack",44,40,4)
+ elseif sel1 == 2 then
+  print("heal 20",44,24,13)
+  print("only when",44,32,13)
+  print("low on hp",44,40,13)
+ elseif sel1 == 3 then
+  print("increase",44,24,8)
+  print("dmg by 5",44,32,8)
+ end
+end
 __gfx__
 000000000000000000000000000177777666561000000001d1000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000017777766656d1000000001d1000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -510,3 +543,7 @@ __gfx__
 00000000000001111000000001666666657100000000001110000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
 000400000000025050270502a0502b050280502015000150000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00130000330603807037060330502f040290302402025020270302a05028040280402b0402e05030040330203604038050390603b0603b0703a07037070330702e06029050270402a0402d05032050330502f070
+__music__
+00 01424344
+
