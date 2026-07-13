@@ -25,7 +25,7 @@ end
 
 function _update()
  updparts()
- 
+ t+=1 
 	if state=="start" then
 	 upd_sg()
 	end
@@ -70,7 +70,7 @@ end
 function start_game()
 	state="start"
 	shake = 0
-	t=0
+	t=30
  
  //animate
  sp=1
@@ -158,7 +158,6 @@ end
 //draw
 function drw_sg()
  cls()
- debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
 
 	print("scissors-8",48,56,7)
  print("press 🅾️ to start",34,64,7)
@@ -166,15 +165,14 @@ function drw_sg()
 	draw_stars()
  ani_stars(p1.sel1)
  
- spr(r.n,56,24+sin(t/30),r.w,r.h)
- spr(p.n,32,80+sin(t/30),p.w,p.h)
- spr(s.n,80,80+sin(t/30),s.w,s.h)
+ spr(r.n,56,24+sin(t/31),r.w,r.h)
+ spr(p.n,32,80+sin(t/33),p.w,p.h)
+ spr(s.n,80,80+sin(t/35),s.w,s.h)
 
 end
 
 function drw_mg()
  cls()
- debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
 
  doshake()
 	draw_stars()
@@ -183,21 +181,21 @@ function drw_mg()
 	spr(arr[flr(sp)],54,32,2,2)
 
  if p1.sel1 == 1 then
-  spr(r.n,r.px,r.py+sin(t/30),r.w,r.h)
+  spr(r.n,r.px,r.py+sin(t/31),r.w,r.h)
 	 drawparts()
  end
  if p1.sel1 == 2 then
-  spr(p.n,p.px,p.py+sin(t/30),p.w,p.h)
+  spr(p.n,p.px,p.py+sin(t/33),p.w,p.h)
 	 drawparts(p.x,p.y)
  end
  if p1.sel1 == 3 then
-  spr(s.n,s.px,s.py+sin(t/30),s.w,s.h)
+  spr(s.n,s.px,s.py+sin(t/35),s.w,s.h)
 	 drawparts(s.x,s.y)
  end
   
- spr(r.n,r.px,r.py+sin(t/30),r.w,r.h)
- spr(p.n,p.px,p.py+sin(t/30),p.w,p.h)
- spr(s.n,s.px,s.py+sin(t/30),s.w,s.h)
+ spr(r.n,r.px,r.py+sin(t/31),r.w,r.h)
+ spr(p.n,p.px,p.py+sin(t/33),p.w,p.h)
+ spr(s.n,s.px,s.py+sin(t/35),s.w,s.h)
 
  drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
 
@@ -205,19 +203,46 @@ end
 
 function drw_res()
  cls()
- print("state:"..state,0,8,7)
- print("p1.sel1:"..p1.sel1,0,16,7)
- print("boss.sel2:"..boss.sel2,0,24,7)
 
  doshake()
 	draw_stars()
  ani_stars(p1.sel1)
-  
- print("p1.hp:"..p1.hp,24,56,7)
- print("boss.hp:"..boss.hp,24,48,7)
-
  drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
 
+	if p1.atk == true then
+	 if p1.sel1 == 1 then
+	  spr(r.n,56,98+sin(t/31),r.w,r.h)
+		 rect(54,96,72,114,r.col)
+		 drawparts()
+	 end
+	 if p1.sel1 == 2 then
+	  spr(p.n,56,98+sin(t/33),p.w,p.h)
+		 drawparts(p.x,p.y)
+		 rect(54,96,72,114,p.col)
+	 end
+	 if p1.sel1 == 3 then
+	  spr(s.n,56,98+sin(t/35),s.w,s.h)
+		 drawparts(s.x,s.y)
+		 rect(54,96,72,114,s.col)
+	 end
+ elseif p1.atk == false then
+	 if boss.sel2 == 1 then
+	  spr(r.n,55,23+sin(t/31),r.w,r.h)
+		 drawparts()
+		 rect(54,22,72,40,r.col)
+	 end
+	 if boss.sel2 == 2 then
+	  spr(p.n,56,24+sin(t/33),p.w,p.h)
+		 drawparts(p.x,p.y)
+		 rect(54,22,72,40,p.col)
+	 end
+	 if boss.sel2 == 3 then
+	  spr(s.n,56,24+sin(t/35),s.w,s.h)
+		 drawparts(s.x,s.y)
+		 rect(54,22,72,40,s.col)
+	 end
+	end
+	print("boss.sel2:"..boss.sel2,0,48)
 end
 
 function drw_buff()
@@ -226,14 +251,12 @@ function drw_buff()
 	draw_stars()
  ani_stars(p1.sel1)
   
- debug(state,p1.sel1,p1.hp,boss.sel2,boss.hp2)
-
  rect(38,16,90,56,7)
 	buffinfo(p1.sel1)
 
- spr(r.n,r.px,r.py+sin(t/30),r.w,r.h)
- spr(p.n,p.px,p.py+sin(t/30),p.w,p.h)
- spr(s.n,s.px,s.py+sin(t/30),s.w,s.h)
+ spr(r.n,r.px,r.py+sin(t/31),r.w,r.h)
+ spr(p.n,p.px,p.py+sin(t/33),p.w,p.h)
+ spr(s.n,s.px,s.py+sin(t/35),s.w,s.h)
  drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
 
 end
@@ -289,7 +312,7 @@ function upd_mg()
    rct2.barw = rct2.barw*(boss.hp/boss.thp)
   elseif p1.atk == false then
    p2atk()
-   if p1.storedcap != 0 then
+   if p1.storedcap > 0 then
     p1.stored += 5
    end
   end 
@@ -368,7 +391,7 @@ end
 //game logic
 function retout(sel1,sel2)
  if sel1 == 0 or sel1 == sel2 then
-  return false
+  return true
  end 
  if sel1 == 1 and sel2 == 3 or
     sel1 == 2 and sel2 == 1 or
@@ -380,7 +403,11 @@ function retout(sel1,sel2)
 end 
 
 function p1atk(storedmg)
- boss.hp -= p1.dmg + storedmg
+ if p1.storedmg != nil then
+  boss.hp -= p1.dmg + p1.storedmg
+ else
+  boss.hp -= p1.dmg
+ end
  if boss.hp < 0 then
   boss.hp=0
  end
@@ -503,6 +530,10 @@ function debug(state, sel1, hp1, hp2, sel2)
  if sel2 != nil then
   print("boss.sel2:"..sel2,0,32,7)
  end
+ if stored != nil then
+  print("p1.storeddmg:"..stored,0,40,7)
+  print("p1.storeddmgcap:"..storedcap,0,48,7)
+	end
 end
 
 function buffinfo(sel1)
