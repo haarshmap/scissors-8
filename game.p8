@@ -177,6 +177,7 @@ function drw_mg()
  doshake()
 	draw_stars()
  ani_stars(p1.sel1)
+ line(0,60,128,60)
 
 	spr(arr[flr(sp)],54,32,2,2)
 
@@ -208,6 +209,7 @@ function drw_res()
 	draw_stars()
  ani_stars(p1.sel1)
  drw_hp(rct1.x1,rct1.y1,rct1.x2,rct1.y2,p1.hp)
+ line(0,60,128,60)
 
 	if p1.atk == true then
 	 if p1.sel1 == 1 then
@@ -242,7 +244,6 @@ function drw_res()
 		 rect(54,22,72,40,s.col)
 	 end
 	end
-	print("boss.sel2:"..boss.sel2,0,48)
 end
 
 function drw_buff()
@@ -250,7 +251,7 @@ function drw_buff()
  doshake()
 	draw_stars()
  ani_stars(p1.sel1)
-  
+
  rect(38,16,90,56,7)
 	buffinfo(p1.sel1)
 
@@ -391,7 +392,7 @@ end
 //game logic
 function retout(sel1,sel2)
  if sel1 == 0 or sel1 == sel2 then
-  return true
+  return nil
  end 
  if sel1 == 1 and sel2 == 3 or
     sel1 == 2 and sel2 == 1 or
